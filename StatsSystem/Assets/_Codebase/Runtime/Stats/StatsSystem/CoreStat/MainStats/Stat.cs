@@ -9,7 +9,7 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
     {
         [field: SerializeField] public StatType StatType { get; private set; }
         [field: SerializeField] public float BaseValue { get; private set; }
-        [field: SerializeField] public List<StatFormula> StatFormulas { get; private set; } = new List<StatFormula>();
+        [field: SerializeField] public List<StatFormula> Formulas { get; private set; } = new List<StatFormula>();
 
         public override string ToString()
         {

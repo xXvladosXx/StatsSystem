@@ -27,31 +27,5 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
                 Debug.LogError("The same attribute was added twice");
             }
         }
-
-        [Button]
-        public void TestStat()
-        {
-            var stats = new List<IRuntimeStat>();
-            foreach (var stat in Stats)
-            {
-                stats.Add(new RuntimeStat(stat));
-            }
-
-            foreach (var runtimeStat in stats)
-            {
-                Debug.Log(runtimeStat.BaseStat.ToString() + " " + runtimeStat.Calculate());
-            }
-        }
-        
-        [Button]
-        public void TestAttribute()
-        {
-            var attributes = new List<IRuntimeAttribute>();
-            foreach (var attribute in Attributes)
-            {
-                attributes.Add(new RuntimeAttribute(attribute));
-            }
-
-        }
     }
 }

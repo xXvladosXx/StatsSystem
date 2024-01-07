@@ -7,6 +7,19 @@ using UnityEngine;
 
 namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
 {
+    public class RuntimeCharacteristics
+    {
+        public readonly List<IRuntimeStat> RuntimeStats;
+        public readonly List<IRuntimeAttribute> RuntimeAttributes;
+
+        public RuntimeCharacteristics(List<IRuntimeStat> runtimeStats, List<IRuntimeAttribute> runtimeAttributes)
+        {
+            RuntimeStats = runtimeStats;
+            RuntimeAttributes = runtimeAttributes;
+        }
+            //1183
+    }
+    
     public class StatsContainer
     {
         private readonly StatsConfig _statsConfig;
@@ -59,15 +72,35 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
 
         public void RecalculateStats()
         {
+            var runtimeStats = new List<IRuntimeStat>();
+            var runtimeAttributes = new List<IRuntimeAttribute>();
+            var runtimeCharacteristics = new RuntimeCharacteristics(runtimeStats, runtimeAttributes);
+
+            foreach (var stat in _statDictionary)
+            {
+                runtimeStats.Add(stat.Value);
+                stat.Value.Value = stat.Value.BaseStat.BaseValue;
+                foreach (var formula in stat.Value.BaseStat.Formulas)
+                {
+                    stat.Value.Value += formula.Calculate(stat.Value, runtimeCharacteristics);
+                }
+            }
+
+            foreach (var statModifier in _statModifiers)
+            {
+                _statDictionary[statModifier.Type].Value += statModifier.Value;
+            }
+
             foreach (var attribute in _attributeDictionary)
             {
+                runtimeAttributes.Add(attribute.Value);
                 attribute.Value.Value = attribute.Value.BaseAttribute.BaseValue;
                 foreach (var formula in attribute.Value.BaseAttribute.Formulas)
                 {
-                    attribute.Value.Value += formula.Calculate(attribute.Value.BaseAttribute, _statsConfig);
+                    attribute.Value.Value += formula.Calculate(attribute.Value, runtimeCharacteristics);
                 }
             }
-            
+
             foreach (var attributeModifier in _attributeModifiers)
             {
                 _attributeDictionary[attributeModifier.Type].Value += attributeModifier.Value;

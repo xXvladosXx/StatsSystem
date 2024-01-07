@@ -5,6 +5,6 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
 {
     public abstract class StatFormula
     {
-        public abstract float Calculate(IRuntimeStat stat, StatsConfig traits);
+        public abstract float Calculate(IRuntimeStat stat, RuntimeCharacteristics traits);
     }
 }

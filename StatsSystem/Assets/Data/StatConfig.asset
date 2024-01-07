@@ -21,6 +21,93 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: <Stat>k__BackingField
-      Entry: 6
+    - Name: <Stats>k__BackingField
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[_Codebase.Runtime.Stats.StatsSystem.CoreStat.IStat,
+        Runtime]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|_Codebase.Runtime.Stats.StatsSystem.CoreStat.Stat, Runtime
+    - Name: <StatType>k__BackingField
+      Entry: 3
+      Data: 0
+    - Name: <BaseValue>k__BackingField
+      Entry: 4
+      Data: 10
+    - Name: <Formulas>k__BackingField
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[_Codebase.Runtime.Stats.StatsSystem.CoreStat.StatFormula,
+        Runtime]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: <Attributes>k__BackingField
+      Entry: 7
+      Data: 3|System.Collections.Generic.List`1[[_Codebase.Runtime.Stats.StatsSystem.CoreAttribute.MainAttributes.IAttribute,
+        Runtime]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 4|_Codebase.Runtime.Stats.StatsSystem.CoreAttribute.MainAttributes.Attribute,
+        Runtime
+    - Name: <AttributeType>k__BackingField
+      Entry: 3
+      Data: 0
+    - Name: <BaseValue>k__BackingField
+      Entry: 4
+      Data: 10
+    - Name: <Formulas>k__BackingField
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[_Codebase.Runtime.Stats.StatsSystem.CoreStat.AttributeFormula,
+        Runtime]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 6|_Codebase.Runtime.Stats.StatsSystem.CoreStat.StatDependableAttributeFormula,
+        Runtime
+    - Name: Modifier
+      Entry: 4
+      Data: 5.13
+    - Name: StatType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 

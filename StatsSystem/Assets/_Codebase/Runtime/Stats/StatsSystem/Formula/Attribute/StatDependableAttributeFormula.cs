@@ -1,5 +1,7 @@
 ﻿using System;
 using _Codebase.Runtime.Stats.StatsSystem.CoreAttribute.MainAttributes;
+using _Codebase.Runtime.Stats.StatsSystem.CoreAttribute.RuntimeAttributes;
+using _Codebase.Runtime.Stats.StatsSystem.CoreStat.RuntimeStats;
 using UnityEngine;
 
 namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
@@ -7,16 +9,16 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
     [Serializable]
     public class StatDependableAttributeFormula : AttributeFormula
     {
-        public float Modifier;
+        [SerializeField] public float Modifier;
         public StatType StatType;
         
-        public override float Calculate(IAttribute attribute, StatsConfig statsConfig)
+        public override float Calculate(IRuntimeAttribute attribute, RuntimeCharacteristics statsConfig)
         {
-            IStat neededStat = null;
+            IRuntimeStat neededStat = null;
             
-            foreach (var stat in statsConfig.Stats)
+            foreach (var stat in statsConfig.RuntimeStats)
             {
-                if (stat.StatType == StatType)
+                if (stat.BaseStat.StatType == StatType)
                 {
                     neededStat = stat;
                 }
@@ -28,7 +30,7 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
                 return 0;
             }
 
-            var value = neededStat.BaseValue * Modifier;
+            var value = neededStat.Value * Modifier;
             return value;
         }
     }

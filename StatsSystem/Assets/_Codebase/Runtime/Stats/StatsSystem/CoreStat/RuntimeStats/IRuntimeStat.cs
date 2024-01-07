@@ -3,6 +3,6 @@
     public interface IRuntimeStat
     {
         IStat BaseStat { get; }
-        float Calculate();
+        float Value { get; set; }
     }
 }

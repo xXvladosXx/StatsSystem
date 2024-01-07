@@ -10,7 +10,7 @@ namespace _Codebase.Runtime.Stats.StatsSystem.CoreStat
         public int Level;
         public float Multiplier;
         
-        public override float Calculate(IRuntimeStat stat, StatsConfig traits)
+        public override float Calculate(IRuntimeStat stat, RuntimeCharacteristics traits)
         {
             return (Level * Multiplier) + stat.BaseStat.BaseValue;
         }
