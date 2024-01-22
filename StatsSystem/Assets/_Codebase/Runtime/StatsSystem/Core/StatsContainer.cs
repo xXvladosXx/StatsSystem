@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using _Codebase.Runtime.StatsSystem.Core.Attributes;
 using _Codebase.Runtime.StatsSystem.Core.Attributes.Core;
+using _Codebase.Runtime.StatsSystem.Core.Modifiers;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers.Core;
 using _Codebase.Runtime.StatsSystem.Core.Stats;
 using _Codebase.Runtime.StatsSystem.Core.Stats.Core;
@@ -13,13 +14,12 @@ namespace _Codebase.Runtime.StatsSystem.Core
         private readonly List<IRuntimeAttribute> _runtimeAttributes = new List<IRuntimeAttribute>();
         private readonly List<IRuntimeStat> _runtimeStats = new List<IRuntimeStat>();
         
-        private readonly List<IAttributeModifier> _attributeModifiers = new List<IAttributeModifier>();
-        private readonly List<IStatModifier> _statModifiers = new List<IStatModifier>();
-
         private readonly Dictionary<AttributeType, IRuntimeAttribute> _attributeDictionary = new Dictionary<AttributeType, IRuntimeAttribute>();
         private readonly Dictionary<StatType, IRuntimeStat> _statDictionary = new Dictionary<StatType, IRuntimeStat>();
 
         private readonly RuntimeCharacteristics _runtimeCharacteristics;
+        
+        private readonly ModifiersCalculator _modifiersCalculator;
 
         public StatsContainer(StatsConfig statsConfig)
         {
@@ -30,6 +30,7 @@ namespace _Codebase.Runtime.StatsSystem.Core
                 _statDictionary.Add(stat.StatType, new RuntimeStat(stat));
 
             _runtimeCharacteristics = new RuntimeCharacteristics(_runtimeStats, _runtimeAttributes);
+            _modifiersCalculator = new ModifiersCalculator();
 
             RecalculateStats();
         }
@@ -40,17 +41,17 @@ namespace _Codebase.Runtime.StatsSystem.Core
             _attributeDictionary[attributeType];
 
         public void AddAttributeModifier(IAttributeModifier attributeModifier) => 
-            _attributeModifiers.Add(attributeModifier);
+            _modifiersCalculator.AddAttributeModifier(attributeModifier);
 
         public void RemoveAttributeModifier(IAttributeModifier attributeModifier) => 
-            _attributeModifiers.Remove(attributeModifier);
+            _modifiersCalculator.RemoveAttributeModifier(attributeModifier);
 
         public void AddStatModifier(IStatModifier statModifier) => 
-            _statModifiers.Add(statModifier);
+            _modifiersCalculator.AddStatModifier(statModifier);
 
         public void RemoveStatModifier(IStatModifier statModifier) => 
-            _statModifiers.Remove(statModifier);
-
+            _modifiersCalculator.RemoveStatModifier(statModifier);
+        
         public void RecalculateStats()
         {
             _runtimeStats.Clear();
@@ -74,12 +75,12 @@ namespace _Codebase.Runtime.StatsSystem.Core
             
             Debug.Log("==================================== Modifiers");
 
-            foreach (var attributeModifier in _attributeModifiers)
+            foreach (var attributeModifier in _modifiersCalculator.AttributeModifiers)
             {
                 Debug.Log(attributeModifier.Type + " = " + attributeModifier.ModifierType.Value);
             }
             
-            foreach (var statModifier in _statModifiers)
+            foreach (var statModifier in _modifiersCalculator.StatModifiers)
             {
                 Debug.Log(statModifier.Type + " = " + statModifier.ModifierType.Value);
             }
@@ -104,7 +105,7 @@ namespace _Codebase.Runtime.StatsSystem.Core
 
         private void RecalculateStatModifiers()
         {
-            foreach (var statModifier in _statModifiers)
+            foreach (var statModifier in _modifiersCalculator.StatModifiers)
                 _statDictionary[statModifier.Type].Value += statModifier.ModifierType.FindBonus(_statDictionary[statModifier.Type].Value);
         }
 
@@ -125,8 +126,13 @@ namespace _Codebase.Runtime.StatsSystem.Core
 
         private void RecalculateAttributeModifiers()
         {
-            foreach (var attributeModifier in _attributeModifiers)
+            foreach (var attributeModifier in _modifiersCalculator.AttributeModifiers)
                 _attributeDictionary[attributeModifier.Type].Value += attributeModifier.ModifierType.FindBonus(_attributeDictionary[attributeModifier.Type].Value);
+        }
+
+        public void Update()
+        {
+            _modifiersCalculator.Update();
         }
     }
 }

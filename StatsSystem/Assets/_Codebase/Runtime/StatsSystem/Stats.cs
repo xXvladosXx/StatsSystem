@@ -1,4 +1,5 @@
-﻿using _Codebase.Runtime.StatsSystem.Core;
+﻿using System;
+using _Codebase.Runtime.StatsSystem.Core;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers.Types;
 using _Codebase.Runtime.StatsSystem.Core.Stats;
@@ -20,13 +21,23 @@ namespace _Codebase.Runtime.StatsSystem
         {
             StatsContainer = new StatsContainer(StatsConfig);
         }
-        
+
+        private void Update()
+        {
+            StatsContainer.Update();
+        }
+
         [Button]
         public void Recalculate()
         {
             StatsContainer.RecalculateStats();
         }
-        
+
+        [Button]
+        public void AddTimeableStatModifier()
+        {
+            StatsContainer.AddStatModifier(new TimeableStatModifier(StatType.Strength, new ConstantType(10), 5));
+        }
         
         [Button]
         public void AddStatModifier()
