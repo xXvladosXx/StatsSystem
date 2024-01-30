@@ -1,64 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using _Codebase.Runtime.StatsSystem.Core.Attributes;
+using _Codebase.Runtime.StatsSystem.Core.Attributes.Core;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers.Core;
+using _Codebase.Runtime.StatsSystem.Core.Stats.Core;
 using UnityEngine;
 
 namespace _Codebase.Runtime.StatsSystem.Core
 {
-    public class ModifiersCalculator
+    public class ModifiersCalculator<T1> 
+        where T1 : Enum
     {
-        private readonly List<TimeableAttributeModifier> _timeableAttributeModifiers = new List<TimeableAttributeModifier>();
-        private readonly List<TimeableStatModifier> _timeableStatModifiers = new List<TimeableStatModifier>();
+        private readonly List<IModifier<T1>> _modifiers = new List<IModifier<T1>>();
+        public IReadOnlyCollection<IModifier<T1>> Modifiers => _modifiers;
         
-        private readonly List<IAttributeModifier> _attributeModifiers = new List<IAttributeModifier>();
-        private readonly List<IStatModifier> _statModifiers = new List<IStatModifier>();
+        public void AddModifier(IModifier<T1> modifier) => 
+            _modifiers.Add(modifier);
 
-        public IReadOnlyCollection<IAttributeModifier> AttributeModifiers => _attributeModifiers;
-        public IReadOnlyCollection<IStatModifier> StatModifiers => _statModifiers;
-        
-        public void AddAttributeModifier(IAttributeModifier attributeModifier)
+        public void RemoveModifier(IModifier<T1> attributeModifier) => 
+            _modifiers.Remove(attributeModifier);
+
+
+        public float MakeOperations(T1 key, float startValue) 
         {
-            _attributeModifiers.Add(attributeModifier);
-            
-            if (attributeModifier is TimeableAttributeModifier timeable)
-                _timeableAttributeModifiers.Add(timeable);
-        }
+            float bonus = 0;
 
-        public void RemoveAttributeModifier(IAttributeModifier attributeModifier) => 
-            _attributeModifiers.Remove(attributeModifier);
-
-        public void AddStatModifier(IStatModifier timeableStatModifier)
-        {
-            _statModifiers.Add(timeableStatModifier);
-            
-            if (timeableStatModifier is TimeableStatModifier timeable)
-                _timeableStatModifiers.Add(timeable);
-        }
-
-        public void RemoveStatModifier(IStatModifier statModifier) => 
-            _statModifiers.Remove(statModifier);
-
-        public void Update()
-        {
-            for (int i = 0; i < _timeableAttributeModifiers.Count; i++)
+            foreach (var modifier in _modifiers)
             {
-                _timeableAttributeModifiers[i].UpdateDuration(Time.deltaTime);
-                if (_timeableAttributeModifiers[i].Duration <= 0)
-                {
-                    RemoveAttributeModifier(_timeableAttributeModifiers[i]);
-                    _timeableAttributeModifiers.RemoveAt(i);
-                }
+                if(modifier.Type.Equals(key))
+                    modifier.Operation(startValue);
             }
-            
-            for (int i = 0; i < _timeableStatModifiers.Count; i++)
-            {
-                _timeableStatModifiers[i].UpdateDuration(Time.deltaTime);
-                if (_timeableStatModifiers[i].Duration <= 0)
-                {
-                    RemoveStatModifier(_timeableStatModifiers[i]);
-                    _timeableStatModifiers.RemoveAt(i);
-                }
-            }
+
+            return bonus;
         }
     }
 }

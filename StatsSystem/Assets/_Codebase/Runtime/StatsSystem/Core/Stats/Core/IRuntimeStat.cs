@@ -1,8 +1,8 @@
 ﻿namespace _Codebase.Runtime.StatsSystem.Core.Stats.Core
 {
-    public interface IRuntimeStat
+    public interface IRuntimeValue<T>
     {
-        IStat BaseStat { get; }
+        T Base { get; }
         float Value { get; set; }
     }
 }

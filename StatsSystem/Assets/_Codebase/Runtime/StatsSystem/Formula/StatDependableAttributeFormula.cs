@@ -15,7 +15,7 @@ namespace _Codebase.Runtime.StatsSystem.Formula
         
         public override float Calculate(float value, RuntimeCharacteristics characteristics)
         {
-            IRuntimeStat neededStat = null;
+            RuntimeStat neededStat = null;
             
             foreach (var stat in characteristics.RuntimeStats)
             {

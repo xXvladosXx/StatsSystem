@@ -1,4 +1,4 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using _Codebase.Runtime.StatsSystem.Core.Attributes;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers.Types;
@@ -123,4 +123,4 @@ namespace _Codebase.Tests.Stats
             attribute.StatsContainer.GetStat(StatType.Strength).Value.Should().Be(startValue + (startValue * 0.1f));
         }
     }
-}*/
+}

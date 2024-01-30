@@ -11,15 +11,16 @@ namespace _Codebase.Runtime.StatsSystem.Core
 {
     public class StatsContainer
     {
-        private readonly List<IRuntimeAttribute> _runtimeAttributes = new List<IRuntimeAttribute>();
-        private readonly List<IRuntimeStat> _runtimeStats = new List<IRuntimeStat>();
+        private readonly List<RuntimeAttribute> _runtimeAttributes = new List<RuntimeAttribute>();
+        private readonly List<RuntimeStat> _runtimeStats = new List<RuntimeStat>();
         
-        private readonly Dictionary<AttributeType, IRuntimeAttribute> _attributeDictionary = new Dictionary<AttributeType, IRuntimeAttribute>();
-        private readonly Dictionary<StatType, IRuntimeStat> _statDictionary = new Dictionary<StatType, IRuntimeStat>();
+        private readonly Dictionary<AttributeType, RuntimeAttribute> _attributeDictionary = new Dictionary<AttributeType, RuntimeAttribute>();
+        private readonly Dictionary<StatType, RuntimeStat> _statDictionary = new Dictionary<StatType, RuntimeStat>();
 
         private readonly RuntimeCharacteristics _runtimeCharacteristics;
-        
-        private readonly ModifiersCalculator _modifiersCalculator;
+
+        private readonly ModifiersCalculator<StatType> _statModifiersCalculator;
+        private readonly ModifiersCalculator<AttributeType> _attributeModifiersCalculator;
 
         public StatsContainer(StatsConfig statsConfig)
         {
@@ -30,28 +31,39 @@ namespace _Codebase.Runtime.StatsSystem.Core
                 _statDictionary.Add(stat.StatType, new RuntimeStat(stat));
 
             _runtimeCharacteristics = new RuntimeCharacteristics(_runtimeStats, _runtimeAttributes);
-            _modifiersCalculator = new ModifiersCalculator();
+            
+            _statModifiersCalculator = new ModifiersCalculator<StatType, RuntimeStat, IStat>();
+            _attributeModifiersCalculator = new ModifiersCalculator<AttributeType, RuntimeAttribute, IAttribute>();
 
             RecalculateStats();
         }
 
-        public IRuntimeStat GetStat(StatType statType) =>
+        public RuntimeStat GetStat(StatType statType) =>
             _statDictionary[statType];
-        public IRuntimeAttribute GetAttribute(AttributeType attributeType) => 
+
+        public RuntimeAttribute GetAttribute(AttributeType attributeType) => 
             _attributeDictionary[attributeType];
 
-        public void AddAttributeModifier(IAttributeModifier attributeModifier) => 
-            _modifiersCalculator.AddAttributeModifier(attributeModifier);
+        public void AddAttributeModifier(IModifier<AttributeType> attributeModifier) 
+        {
+            _attributeModifiersCalculator.AddModifier(attributeModifier);
+        }
 
-        public void RemoveAttributeModifier(IAttributeModifier attributeModifier) => 
-            _modifiersCalculator.RemoveAttributeModifier(attributeModifier);
+        public void RemoveAttributeModifier(IModifier<AttributeType> attributeModifier)
+        {
+            _attributeModifiersCalculator.RemoveModifier(attributeModifier);
+        }
 
-        public void AddStatModifier(IStatModifier statModifier) => 
-            _modifiersCalculator.AddStatModifier(statModifier);
-
-        public void RemoveStatModifier(IStatModifier statModifier) => 
-            _modifiersCalculator.RemoveStatModifier(statModifier);
+        public void AddStatModifier(IModifier<StatType> statModifier)
+        {
+            _statModifiersCalculator.AddModifier(statModifier);
+        }
         
+        public void RemoveStatModifier(IModifier<StatType> statModifier)
+        {
+            _statModifiersCalculator.RemoveModifier(statModifier);
+        }
+
         public void RecalculateStats()
         {
             _runtimeStats.Clear();
@@ -75,14 +87,9 @@ namespace _Codebase.Runtime.StatsSystem.Core
             
             Debug.Log("==================================== Modifiers");
 
-            foreach (var attributeModifier in _modifiersCalculator.AttributeModifiers)
+            foreach (var attributeModifier in _attributeModifiersCalculator.Modifiers)
             {
                 Debug.Log(attributeModifier.Type + " = " + attributeModifier.ModifierType.Value);
-            }
-            
-            foreach (var statModifier in _modifiersCalculator.StatModifiers)
-            {
-                Debug.Log(statModifier.Type + " = " + statModifier.ModifierType.Value);
             }
             
             Debug.Log("====================================");
@@ -105,8 +112,8 @@ namespace _Codebase.Runtime.StatsSystem.Core
 
         private void RecalculateStatModifiers()
         {
-            foreach (var statModifier in _modifiersCalculator.StatModifiers)
-                _statDictionary[statModifier.Type].Value += statModifier.ModifierType.FindBonus(_statDictionary[statModifier.Type].Value);
+            foreach (var runtimeStat in _statDictionary)
+                _statModifiersCalculator.MakeOperations(runtimeStat.Key, runtimeStat.Value);
         }
 
         private void RecalculateBaseAttributes()
@@ -126,13 +133,16 @@ namespace _Codebase.Runtime.StatsSystem.Core
 
         private void RecalculateAttributeModifiers()
         {
-            foreach (var attributeModifier in _modifiersCalculator.AttributeModifiers)
-                _attributeDictionary[attributeModifier.Type].Value += attributeModifier.ModifierType.FindBonus(_attributeDictionary[attributeModifier.Type].Value);
+            foreach (var runtimeAttribute in _attributeDictionary) 
+                runtimeAttribute.Value.Value += _attributeModifiersCalculator.MakeOperations(runtimeAttribute.Key, runtimeAttribute.Value.Value);
         }
 
-        public void Update()
-        {
-            _modifiersCalculator.Update();
-        }
+        // public void Update()
+
+        // {
+
+        //     _modifiersCalculator.Update();
+
+        // }
     }
 }

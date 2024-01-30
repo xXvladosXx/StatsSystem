@@ -1,14 +1,17 @@
 using System;
 using _Codebase.Runtime.StatsSystem.Core.Attributes.Core;
+using _Codebase.Runtime.StatsSystem.Core.Stats.Core;
 
 namespace _Codebase.Runtime.StatsSystem.Core.Attributes
 {
-    class RuntimeAttribute : IRuntimeAttribute
+    public class RuntimeAttribute : IRuntimeValue<IAttribute>
     {
         public IAttribute BaseAttribute { get; }
         
         private float _value;
-        
+
+        public IAttribute Base { get; }
+
         public float Value
         {
             get => _value;

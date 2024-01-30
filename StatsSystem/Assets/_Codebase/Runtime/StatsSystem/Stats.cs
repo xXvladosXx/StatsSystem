@@ -1,5 +1,6 @@
 ﻿using System;
 using _Codebase.Runtime.StatsSystem.Core;
+using _Codebase.Runtime.StatsSystem.Core.Attributes;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers;
 using _Codebase.Runtime.StatsSystem.Core.Modifiers.Types;
 using _Codebase.Runtime.StatsSystem.Core.Stats;
@@ -24,7 +25,7 @@ namespace _Codebase.Runtime.StatsSystem
 
         private void Update()
         {
-            StatsContainer.Update();
+            //StatsContainer.Update();
         }
 
         [Button]
@@ -36,19 +37,19 @@ namespace _Codebase.Runtime.StatsSystem
         [Button]
         public void AddTimeableStatModifier()
         {
-            StatsContainer.AddStatModifier(new TimeableStatModifier(StatType.Strength, new ConstantType(10), 5));
+            //StatsContainer.AddStatModifier(new TimeableAttributeStatModifier(StatType.Strength, new ConstantType(10), 5));
         }
         
         [Button]
         public void AddStatModifier()
         {
-            StatsContainer.AddStatModifier(new StatModifier(StatType.Strength, new ConstantType(10)));
+            StatsContainer.AddAttributeModifier(new AttributeModifier(AttributeType.Health, new ConstantType(10)));
         }
         
         [Button]
         public void RemoveStatModifier()
         {
-            StatsContainer.RemoveStatModifier(new StatModifier(StatType.Strength, new ConstantType(10)));
+            StatsContainer.RemoveAttributeModifier(new AttributeModifier(AttributeType.Health, new ConstantType(10)));
         }
 
         [Button]
@@ -61,7 +62,7 @@ namespace _Codebase.Runtime.StatsSystem
             
             foreach (var statModifier in modifiableItem.StatModifiers)
             {
-                StatsContainer.AddStatModifier(statModifier);
+                //StatsContainer.AddStatModifier(statModifier);
             }
             
             StatsContainer.RecalculateStats();
@@ -77,7 +78,7 @@ namespace _Codebase.Runtime.StatsSystem
             
             foreach (var statModifier in modifiableItem.StatModifiers)
             {
-                StatsContainer.RemoveStatModifier(statModifier);
+                //StatsContainer.RemoveStatModifier(statModifier);
             }
             
             StatsContainer.RecalculateStats();
